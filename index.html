@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
+    "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+<html>
+   	<head>
+		<title>StarCraft II Race Picker</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<!-- Bootstrap -->
+		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<!--I hate having to do this inline, but Android best practices state...-->
+		<style>
+			body {background:#dedede;}
+			#app_container {
+				margin: 10px auto;
+				width: 400px;
+				height: 100%;
+				background: #EDEDED;
+				border: 1px solid #CCC;
+				padding: 20px;
+			}
+			.race_container {
+				padding: 5px 10px;
+			}
+		</style>
+		<script src="http://code.jquery.com/jquery.js"></script>
+		<script>
+		$(window).load(function () {
+			var a_conversion_array = ['terran', 'zerg', 'protoss'],
+				i_max_iterations = 20,
+				i_max_miliseconds = 200;
+
+			function randomise () {
+				var random_number = Math.floor(Math.random()*3);
+				$('.race_container').css('background', 'none');
+				console.log(a_conversion_array[random_number]);
+				$('#' + a_conversion_array[random_number] + '_container').css('background', '#CCC');
+			}
+
+			function keep_randomising(pi_iteration) {
+				var li_iteration = pi_iteration,
+					timing = i_max_miliseconds/li_iteration+50;
+				console.log('timing = ' + timing);
+				if (i_max_iterations >= li_iteration) {
+					console.log('itiration = ' + li_iteration)
+					randomise();
+					li_iteration++;
+					setTimeout(function () {
+						keep_randomising(li_iteration);
+					}, 50);
+				}
+			}
+
+			$('#randomiser').bind('click', function () {
+				keep_randomising(1);
+			});
+		});
+		</script>
+	</head>
+	<body>
+		<div id="app_container">
+			<div class="race_container" id="terran_container">
+				<h3 class="race_label">TERRAN</h3>
+			</div>
+			<div class="race_container" id="zerg_container">
+				<h3 class="race_label">ZERG</h3>
+			</div>
+			<div class="race_container" id="protoss_container">
+				<h3 class="race_label">PROTOSS</h3>
+			</div>
+			<button class="btn btn-primary" id="randomiser">Choose race! <i class="icon-random icon-white"></i></button>
+		</div>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+	</body>
+</html>

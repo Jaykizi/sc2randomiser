@@ -6,20 +6,52 @@
 		<title>StarCraft II Race Picker</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 		<!-- Bootstrap -->
-		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<!--I hate having to do this inline, but Android best practices state...-->
 		<style>
-			body {background:#dedede;}
+			body {
+				background: #dedede;
+				margin: none;
+			}
+			#top_bar {
+				margin: 0;
+				padding: 5px 5px 10px 10px;
+				height: 60px;
+				width: 100%;
+				background: transparent url(img/top_background.png) repeat-x;
+			}
+			#top_bar h3 {
+				color: #00B6FF;
+				font-weight: normal;
+			}
 			#app_container {
-				margin: 10px auto;
-				width: 400px;
+				margin: 10px;
 				height: 100%;
 				background: #EDEDED;
 				border: 1px solid #CCC;
 				padding: 20px;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;
 			}
 			.race_container {
+				color: inherit;
+				background: none;
 				padding: 5px 10px;
+				-webkit-border-radius: 3px;
+				-moz-border-radius: 3px;
+				border-radius: 3px;
+			}
+			.race_container.selected {
+				background: #DEDEDE;
+			}
+			.race_container.final_selection {
+				color: #00B6FF;
+			}
+			#randomiser {
+				font-size: 22px;
+				margin-top: 20px;
+				padding: 10px;
 			}
 		</style>
 		<script src="http://code.jquery.com/jquery.js"></script>
@@ -27,26 +59,36 @@
 		$(window).load(function () {
 			var a_conversion_array = ['terran', 'zerg', 'protoss'],
 				i_max_iterations = 20,
-				i_max_miliseconds = 200;
+				l_race_selection,
+				$race_containers = $('.race_container'),
+				$selected_race;
 
 			function randomise () {
-				var random_number = Math.floor(Math.random()*3);
-				$('.race_container').css('background', 'none');
-				console.log(a_conversion_array[random_number]);
-				$('#' + a_conversion_array[random_number] + '_container').css('background', '#CCC');
+				var li_random_number = Math.floor(Math.random()*3);
+
+				// Deselect any other races
+				$race_containers.removeClass('final_selection').removeClass('selected');
+				// Select new race
+				$selected_race = $('#' + a_conversion_array[li_random_number] + '_container');
+				$selected_race.addClass('selected');
+				// Set global race selector
+				l_race_selection = a_conversion_array[li_random_number]
+				
 			}
 
 			function keep_randomising(pi_iteration) {
-				var li_iteration = pi_iteration,
-					timing = i_max_miliseconds/li_iteration+50;
-				console.log('timing = ' + timing);
+				var li_iteration = pi_iteration;
+
 				if (i_max_iterations >= li_iteration) {
-					console.log('itiration = ' + li_iteration)
 					randomise();
 					li_iteration++;
 					setTimeout(function () {
 						keep_randomising(li_iteration);
 					}, 50);
+				}
+				else {
+					console.log(l_race_selection);
+					$selected_race.addClass('final_selection');
 				}
 			}
 
@@ -57,6 +99,9 @@
 		</script>
 	</head>
 	<body>
+		<div id="top_bar">
+			<h3>StarCraft II Random Race Picker</h3>
+		</div>
 		<div id="app_container">
 			<div class="race_container" id="terran_container">
 				<h3 class="race_label">TERRAN</h3>
@@ -67,8 +112,8 @@
 			<div class="race_container" id="protoss_container">
 				<h3 class="race_label">PROTOSS</h3>
 			</div>
-			<button class="btn btn-primary" id="randomiser">Choose race! <i class="icon-random icon-white"></i></button>
+			<button class="btn btn-success" id="randomiser">Choose race!</button>
 		</div>
-		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
 	</body>
 </html>

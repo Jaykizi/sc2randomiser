@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 <html>
    	<head>
-		<title>StarCraft II Race Picker</title>
+		<title>StarCraft II Random Race Picker</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 		<!-- Bootstrap -->
 		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -37,15 +37,20 @@
 			}
 			.race_container {
 				color: inherit;
-				background: none;
+				background: rgba(0, 0, 0, 0.1);
 				padding: 5px 10px;
+				border: 1px solid #DEDEDE;
+				/* Rounded corners */
 				-webkit-border-radius: 3px;
 				-moz-border-radius: 3px;
 				border-radius: 3px;
-				text-shadow: 0px 1px 1px #666;
-			}
-			.race_container.selected {
-				background: #DEDEDE;
+				text-shadow: 0px -1px 1px #666;
+				/* Inner top shadow */
+				-moz-box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+				-webkit-box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+				box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+				/* Border bottom light */
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 			}
 			.race_container.final_selection {
 				color: #00B6FF;
@@ -63,20 +68,14 @@
 			var a_conversion_array = ['terran', 'zerg', 'protoss'],
 				i_max_iterations = 20,
 				l_race_selection,
-				$race_containers = $('.race_container'),
-				$selected_race;
+				$race_container = $('#race_container'),
+				$race_label = $('#race_label');
 
 			function randomise () {
 				var li_random_number = Math.floor(Math.random()*3);
 
-				// Deselect any other races
-				$race_containers.removeClass('final_selection').removeClass('selected');
-				// Select new race
-				$selected_race = $('#' + a_conversion_array[li_random_number] + '_container');
-				$selected_race.addClass('selected');
-				// Set global race selector
-				l_race_selection = a_conversion_array[li_random_number]
-				
+				l_race_selection = a_conversion_array[li_random_number];
+				$race_label.html(l_race_selection.toUpperCase());
 			}
 
 			function keep_randomising(pi_iteration) {
@@ -90,12 +89,12 @@
 					}, 50);
 				}
 				else {
-					console.log(l_race_selection);
-					$selected_race.addClass('final_selection');
+					$race_container.addClass('final_selection');
 				}
 			}
 
 			$('#randomiser').bind('click', function () {
+				$race_container.removeClass('final_selection');
 				keep_randomising(1);
 			});
 		});
@@ -106,14 +105,10 @@
 			<h3>StarCraft II Random Race Picker</h3>
 		</div>
 		<div id="app_container">
-			<div class="race_container" id="terran_container">
-				<h3 class="race_label">TERRAN</h3>
-			</div>
-			<div class="race_container" id="zerg_container">
-				<h3 class="race_label">ZERG</h3>
-			</div>
-			<div class="race_container" id="protoss_container">
-				<h3 class="race_label">PROTOSS</h3>
+			<div id="app_window">
+				<div id="race_container" class="race_container">
+					<h3 id="race_label" class="race_label">TERRAN</h3>
+				</div>
 			</div>
 			<button class="btn btn-success" id="randomiser">Choose race!</button>
 		</div>
